@@ -13,32 +13,94 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Iniciar Sesión</title>
+        <style>
+        body {
+            background-color: #eff5f8;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #009688;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #009688;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        input[type="submit"] {
+            background-color: #009688;
+            color: #ffffff;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #00796b;
+        }
+
+        #resultLogin {
+            text-align: center;
+            color: #ff0000;
+            margin-bottom: 16px;
+        }
+
+        .date-container {
+            text-align: center;
+            margin-bottom: 16px;
+        }
+    </style>
     </head>
     <body>
-        <div><h1>Iniciar Sesion</h1></div>
+        
         <div>
             <form method="POST" action="/SistemaWebFarmaceutico/ServletPrincipal?accion=Login"> 
                 <div id="resultLogin"></div>
-                <div><h1>Bienvenido al Sistema de Farmacia</h1></div><br>
+                
+                <h1>Iniciar Sesión</h1>
                 <%-- Crear objeto de la clase Date y formatear --%>
                 <c:set var="fechaActual" value="<%= new java.util.Date() %>" />
                 <c:set var="formatoFecha" value="dd/MM/YYYY" />
                 
                 <%-- Imprimir fecha --%>
-                <div>
+                <div class="date-container">
                     <label>
                         <strong>
-                            <c:out value="Fecha Actual: "/>
+                            <c:out value="Fecha: "/>
                             <fmt:formatDate value='${fechaActual}' pattern='${formatoFecha}'/>
                         </strong>
                     </label>
                 </div><br>
-                <div><label>Usuario:</label></div>
-                <div><input type="text" name="tfUsuario"></div>
-                <div><label>Contraseña:</label></div>
-                <div><input type="password" name="tfContrasenia"></div><br>
-                <div><input type="submit" value="Iniciar Sesion"></div>
+                <label for="tfUsuario">Usuario:</label>
+                <input type="text" id="tfUsuario" name="tfUsuario" required>
+
+                <label for="tfContrasenia">Contraseña:</label>
+                <input type="password" id="tfContrasenia" name="tfContrasenia" required>
+
+                <input type="submit" value="Iniciar Sesión">
             </form>
         </div>
     </body>

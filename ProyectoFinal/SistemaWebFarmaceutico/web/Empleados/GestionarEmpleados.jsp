@@ -11,7 +11,56 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Gestionar Empleados</title>
+        
         <style>
+            
+            body {
+            background-color: #eff5f8;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            }
+
+            h1, h2, h3 {
+                color: #009688;
+                text-align: center;
+                margin-bottom: 20px;
+            }
+
+            a {
+                text-decoration: none;
+                display: inline-block;
+                padding: 8px 16px;
+                background-color: #4CAF50; /* Verde */
+                color: #fff;
+                text-decoration: none;
+                border-radius: 4px;
+                transition: background-color 0.3s ease;
+            }
+            a:hover{
+                background-color: #45a049;
+            }
+  
+
+            table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-bottom: 20px;
+            }
+
+            th, td {
+                border: 1px solid #009688;
+                padding: 8px;
+                text-align: center;
+            }
+
+            th {
+                background-color: #009688;
+                color: #fff;
+            }
            /* Estilo para el contenedor del pop-up */
            .popup-container {
                display: none;
@@ -36,6 +85,22 @@
                background-color: rgba(0, 0 ,0 , 0.5);
                z-index: 0;
            }
+           button,
+            input {
+                background-color: #009688;
+                color: #fff;
+                padding: 8px 16px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                margin-right: 10px;
+                margin: 5px
+            }
+
+            button:hover,
+            input:hover {
+                background-color: #00796b;
+            }
            
         </style>
         
@@ -49,8 +114,8 @@
          <!-- AÑADIR OPCION DE NUEVO REGISTRO -->
         <a href="/SistemaWebFarmaceutico?accion=AgregarEmpleado">Agregar empleado</a><br><br>
         
-        <table border="1">
-            <thead>
+        <table>
+            <thead >
                 <tr>
                     <th>Nombres</th>
                     <th>Apellidos</th>
@@ -113,7 +178,7 @@
                             </div>
                             
                             <!-- modificar -->
-                            <form method="POST" action="/SistemaWebFarmaceutico/ModificarEmpleado.jsp">
+                            <form method="POST" action="/SistemaWebFarmaceutico/Empleados/ModificarEmpleado.jsp">
                                 <input type="hidden" name="ID_Empleado" value="${item.ID_Empleado}" />
                                 <input type="hidden" name="nombresEmpleado" value="${item.nombresEmpleado}" />
                                 <input type="hidden" name="apellidosEmpleado" value="${item.apellidosEmpleado}" />
@@ -128,7 +193,7 @@
                             </form>
                                 
                             <!-- eliminar -->
-                            <form method="POST" action="/SistemaWebFarmaceutico/EliminarEmpleado.jsp">
+                            <form method="POST" action="/SistemaWebFarmaceutico/Empleados/EliminarEmpleado.jsp">
                                 <input type="hidden" name="ID_Empleado" value="${item.ID_Empleado}" />
                                 <input type="hidden" name="nombresEmpleado" value="${item.nombresEmpleado}" />
                                 <input type="hidden" name="apellidosEmpleado" value="${item.apellidosEmpleado}" />
@@ -146,9 +211,12 @@
                 </c:forEach>
             </tbody>            
         </table>
-       
+        <button onclick="regresar()">Regresar</button>
     </body>
     <script>
+        function regresar(){
+            window.history.back();
+        }
         
         function abrirPopup()
         {

@@ -1,8 +1,8 @@
 
 package servlets;
 
-import Models.ViewModelClientes;
-import Models.ViewModelCompras;
+
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,11 +11,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import Models.ViewModelEmpleados;
+import Models.ViewModelClientes;
 import Models.ViewModelFacturas;
 import Models.ViewModelMedicamentos;
 import Models.ViewModelProveedores;
 import Models.ViewModelUsuarios;
-import Models.ViewModelVentas;
+
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -88,7 +89,7 @@ public class ServletPrincipal extends HttpServlet {
             ex.printStackTrace();
         }
     }
-    //pte
+    
     public void agregarUsuario(HttpServletRequest request, HttpServletResponse response) {
         //CAPTURA DE VARIABLES
         //El ID de los empleados es autoincrementable
@@ -121,7 +122,7 @@ public class ServletPrincipal extends HttpServlet {
             ex.printStackTrace();
         }
     }
-    //pte
+    
     public void modificarUsuario(HttpServletRequest request, HttpServletResponse response) {
         //CAPTURA DE VARIABLES
         String ID_Usuario = request.getParameter("ID_Usuario");
@@ -156,7 +157,7 @@ public class ServletPrincipal extends HttpServlet {
             ex.printStackTrace();
         }
     }
-    //pte
+    
     public void eliminarUsuario(HttpServletRequest request, HttpServletResponse response) {
         String ID_Usuario = request.getParameter("ID_Usuario");
         try {
@@ -216,26 +217,28 @@ public class ServletPrincipal extends HttpServlet {
             ex.printStackTrace();
         }
     }
-    //pte
+    
     public void agregarFactura(HttpServletRequest request, HttpServletResponse response) {
         //CAPTURA DE VARIABLES
         //El ID de los empleados es autoincrementable
-        String nombreProveedor = request.getParameter("nombreProveedor");
-        String telefonoProveedor = request.getParameter("telefonoProveedor");
-        String email = request.getParameter("email");
-        String ID_Direccion = request.getParameter("ID_Direccion");
+        String numFact = request.getParameter("numFact");
+        String creditoFiscal = request.getParameter("creditoFiscal");
+        String iVA = request.getParameter("iVA");
+        String montoTotal = request.getParameter("montoTotal");
+        String ID_Venta = request.getParameter("ID_Venta");
        
 
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             try (Connection conn = DriverManager.getConnection(url)) {
                 request.setAttribute("mensaje_conexion", "Ok!");
-                String sql = "insert into Proveedores values (?, ?, ?, ?)";
+                String sql = "insert into Facturas values (?, ?, ?, ?,?)";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, nombreProveedor);
-                pstmt.setString(2, telefonoProveedor);
-                pstmt.setString(3, email);
-                pstmt.setString(4, ID_Direccion);
+                pstmt.setString(1, numFact);
+                pstmt.setString(2, creditoFiscal);
+                pstmt.setString(3, iVA);
+                pstmt.setString(4, montoTotal);
+                pstmt.setString(5, ID_Venta);
 
                 int registros = pstmt.executeUpdate();
                 if (registros > 0) {
@@ -249,14 +252,15 @@ public class ServletPrincipal extends HttpServlet {
             ex.printStackTrace();
         }
     }
-    //pte
+    
     public void modificarFactura(HttpServletRequest request, HttpServletResponse response) {
         //CAPTURA DE VARIABLES
-        String ID_Proveedor = request.getParameter("ID_Proveedor");
-        String nombreProveedor = request.getParameter("nombreProveedor");
-        String telefonoProveedor = request.getParameter("telefonoProveedor");
-        String email = request.getParameter("email");
-        String ID_Direccion = request.getParameter("ID_Direccion");
+        String ID_Factura = request.getParameter("ID_Factura");
+        String numFact = request.getParameter("numFact");
+        String creditoFiscal = request.getParameter("creditoFiscal");
+        String iVA = request.getParameter("iVA");
+        String montoTotal = request.getParameter("montoTotal");
+        String ID_Venta = request.getParameter("ID_Venta");
         
 
         try {
@@ -264,12 +268,13 @@ public class ServletPrincipal extends HttpServlet {
             try (Connection conn = DriverManager.getConnection(url)) {
                 request.setAttribute("mensaje_conexion", "Ok!");
                 
-                String sql = "update Proveedores set "
-                 + "NombreProveedor='"+nombreProveedor+"', "
-                 + "TelefonoProveedor='"+telefonoProveedor+"', "
-                 + "Email='"+email+"', " 
-                 + "ID_Direccion='"+ID_Direccion+"' " 
-                 + "where ID_Proveedor='"+ID_Proveedor+"'";
+                String sql = "update Facturas set "
+                 + "NumFact='"+numFact+"', "
+                 + "CreditoFiscal='"+creditoFiscal+"', "
+                 + "IVA='"+iVA+"', " 
+                 + "MontoTotal='"+montoTotal+"', " 
+                 + "ID_Venta='"+ID_Venta+"' " 
+                 + "where ID_Factura='"+ID_Factura+"'";
                 
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 int registros = pstmt.executeUpdate();
@@ -284,14 +289,14 @@ public class ServletPrincipal extends HttpServlet {
             ex.printStackTrace();
         }
     }
-    //pte
+    
     public void eliminarFactura(HttpServletRequest request, HttpServletResponse response) {
-        String ID_Proveedor = request.getParameter("ID_Proveedor");
+        String ID_Factura = request.getParameter("ID_Factura");
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             try (Connection conn = DriverManager.getConnection(url)) {
                 request.setAttribute("mensaje_conexion", "Ok!");
-                String sql = "delete from Proveedores where ID_Proveedor='" + ID_Proveedor + "'";
+                String sql = "delete from Facturas where ID_Factura='" + ID_Factura + "'";
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 int registros = pstmt.executeUpdate();
                 if (registros > 0) {
@@ -305,371 +310,6 @@ public class ServletPrincipal extends HttpServlet {
             ex.printStackTrace();
         }
     } 
-    
-    
-// VENTAS************************************************************************************
-    public void mostrarVentas(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-
-            try(Connection conn = DriverManager.getConnection(url)){
-            //try (Connection conn = DriverManager.getConnection(url);) {
-                request.setAttribute("mensaje_conexion", "Ok!");
-                String sqlQuery = "select * from VistaVentas";
-                PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
-                ResultSet rs = pstmt.executeQuery();
-                ArrayList<ViewModelVentas> listaVentas = new ArrayList<>();
-                while (rs.next()) {
-                    ViewModelVentas venta = new ViewModelVentas();
-                    venta.setID_Venta(rs.getInt("ID_Venta"));
-                    venta.setFechaVenta(rs.getDate("fechaVenta"));
-                    venta.setMontoVenta(rs.getDouble("montoVenta"));
-                    venta.setID_Cliente(rs.getInt("ID_Cliente"));
-                    venta.setCliente(rs.getString("cliente"));
-                    venta.setID_Empleado(rs.getInt("ID_Empleado"));
-                    venta.setEmpleado(rs.getString("empleado"));
-                    venta.setID_Medicamento(rs.getInt("ID_Medicamento"));
-                    venta.setNombreMedicamento(rs.getString("nombreMedicamento"));
-                    venta.setCantidadProdVenta(rs.getInt("cantidadProdVenta"));
-                    venta.setPrecioUnitario(rs.getDouble("precioUnitario"));
-                    listaVentas.add(venta);
-                }               
-                request.setAttribute("listaVentas", listaVentas);
-
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            request.setAttribute("mensaje_conexion", ex.getMessage());
-            ex.printStackTrace();
-        }
-    }
-    //pte
-    public void agregarVenta(HttpServletRequest request, HttpServletResponse response) {
-        //CAPTURA DE VARIABLES
-        //El ID de los empleados es autoincrementable
-        String nombreProveedor = request.getParameter("nombreProveedor");
-        String telefonoProveedor = request.getParameter("telefonoProveedor");
-        String email = request.getParameter("email");
-        String ID_Direccion = request.getParameter("ID_Direccion");
-       
-
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            try (Connection conn = DriverManager.getConnection(url)) {
-                request.setAttribute("mensaje_conexion", "Ok!");
-                String sql = "insert into Proveedores values (?, ?, ?, ?)";
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                pstmt.setString(1, nombreProveedor);
-                pstmt.setString(2, telefonoProveedor);
-                pstmt.setString(3, email);
-                pstmt.setString(4, ID_Direccion);
-
-                int registros = pstmt.executeUpdate();
-                if (registros > 0) {
-                    request.getSession().setAttribute("exito", true);
-                } else {
-                    request.getSession().setAttribute("exito", false);
-                }
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            request.getSession().setAttribute("exito", false);
-            ex.printStackTrace();
-        }
-    }
-    //pte
-    public void modificarVenta(HttpServletRequest request, HttpServletResponse response) {
-        //CAPTURA DE VARIABLES
-        String ID_Proveedor = request.getParameter("ID_Proveedor");
-        String nombreProveedor = request.getParameter("nombreProveedor");
-        String telefonoProveedor = request.getParameter("telefonoProveedor");
-        String email = request.getParameter("email");
-        String ID_Direccion = request.getParameter("ID_Direccion");
-        
-
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            try (Connection conn = DriverManager.getConnection(url)) {
-                request.setAttribute("mensaje_conexion", "Ok!");
-                
-                String sql = "update Proveedores set "
-                 + "NombreProveedor='"+nombreProveedor+"', "
-                 + "TelefonoProveedor='"+telefonoProveedor+"', "
-                 + "Email='"+email+"', " 
-                 + "ID_Direccion='"+ID_Direccion+"' " 
-                 + "where ID_Proveedor='"+ID_Proveedor+"'";
-                
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                int registros = pstmt.executeUpdate();
-                if (registros > 0) {
-                    request.getSession().setAttribute("exito", true);
-                } else {
-                    request.getSession().setAttribute("exito", false);
-                }
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            request.getSession().setAttribute("exito", false);
-            ex.printStackTrace();
-        }
-    }
-    //pte
-    public void eliminarVenta(HttpServletRequest request, HttpServletResponse response) {
-        String ID_Proveedor = request.getParameter("ID_Proveedor");
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            try (Connection conn = DriverManager.getConnection(url)) {
-                request.setAttribute("mensaje_conexion", "Ok!");
-                String sql = "delete from Proveedores where ID_Proveedor='" + ID_Proveedor + "'";
-                PreparedStatement pstmt = conn.prepareStatement(sql);
-                int registros = pstmt.executeUpdate();
-                if (registros > 0) {
-                    request.getSession().setAttribute("exito", true);
-                } else {
-                    request.getSession().setAttribute("exito", false);
-                }
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            request.getSession().setAttribute("exito", false);
-            ex.printStackTrace();
-        }
-    } 
-    
-    
-// COMPRAS************************************************************************************
-    public void mostrarCompras(HttpServletRequest request, HttpServletResponse response) {
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-
-            try(Connection conn = DriverManager.getConnection(url)){
-            //try (Connection conn = DriverManager.getConnection(url);) {
-                request.setAttribute("mensaje_conexion", "Ok!");
-                String sqlQuery = "select * from VistaCompras";
-                PreparedStatement pstmt = conn.prepareStatement(sqlQuery);
-                ResultSet rs = pstmt.executeQuery();
-                ArrayList<ViewModelCompras> listaCompras = new ArrayList<>();
-                while (rs.next()) {
-                    ViewModelCompras compra = new ViewModelCompras();
-                    compra.setID_Compra(rs.getInt("ID_Compra"));
-                    compra.setFechaCompra(rs.getDate("fechaCompra"));
-                    compra.setMontoCompra(rs.getDouble("montoCompra"));
-                    compra.setID_Proveedor(rs.getInt("ID_Proveedor"));
-                    compra.setNombreProveedor(rs.getString("nombreProveedor"));
-                    compra.setCantidadProdCompra(rs.getInt("cantidadProdCompra"));
-                    compra.setID_Medicamento(rs.getInt("ID_Medicamento"));
-                    compra.setNombreMedicamento(rs.getString("nombreMedicamento"));
-                    listaCompras.add(compra);
-                }               
-                request.setAttribute("listaCompras", listaCompras);
-
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            request.setAttribute("mensaje_conexion", ex.getMessage());
-            ex.printStackTrace();
-        }
-    }
-    //pte
-   /* public void agregarCompra(HttpServletRequest request, HttpServletResponse response) {
-        //CAPTURA DE VARIABLES
-        //El ID de los empleados es autoincrementable
-        String fechaCompra = request.getParameter("fechaCompra");//compras
-        String montoCompra = request.getParameter("montoCompra");//compras
-        String ID_Proveedor = request.getParameter("ID_Proveedor");//compras
-        String cantidadProdCompra = request.getParameter("cantidadProdCompra");//detallecompras
-        String ID_Medicamento = request.getParameter("ID_Medicamento");//detallecompras
-        
-        // se usara una transaccion para asegurar la insercion en ambas tabla
-        Connection conn = null;
-
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            conn = DriverManager.getConnection(url);
-            request.setAttribute("mensaje_conexion", "Ok!");
-            conn.setAutoCommit(false);  // Inicia la transacción
-
-            String sqlCompras = "insert into Compras values (?, ?, ?)";
-            try(PreparedStatement pstmtCompras = conn.prepareStatement(sqlCompras)){   
-                pstmtCompras.setString(1, fechaCompra);
-                pstmtCompras.setString(2, montoCompra);
-                pstmtCompras.setString(3, ID_Proveedor);
-                
-                ResultSet resultSet =pstmtCompras.executeQuery();
-                
-                if(resultSet.next()){
-                    int idCompraGenerado = resultSet.getInt(1);
-                    
-                    // Insertar en la tabla Detalle_Compras utilizando el ID generado
-                    String sqlDetalleCompras = "insert into Detalle_Compras values (?, ?, ?)";
-                    try (PreparedStatement pstmtDet = conn.prepareStatement(sqlDetalleCompras)) {
-                        pstmtDet.setInt(1, idCompraGenerado);
-                        pstmtDet.setString(2, cantidadProdCompra);
-                        pstmtDet.setString(3, ID_Medicamento);
-
-                        pstmtDet.executeUpdate();
-                    }
-                }else{
-                    // Manejar el caso en el que no se generó un ID
-                throw new SQLException("No se generó un ID para Compras.");
-                }
-            }
-            conn.commit();
-            request.getSession().setAttribute("exito", true);
-
-        }catch (SQLException | ClassNotFoundException ex) {
-            // En caso de error, revierte la transacción
-            try {
-                if (conn != null) {
-                    conn.rollback();
-                }
-            } catch (SQLException rollbackEx) {
-                rollbackEx.printStackTrace();
-            }
-
-            request.getSession().setAttribute("exito", false);
-            ex.printStackTrace();
-        } finally {
-            // Asegúrate de cerrar la conexión
-            try {
-                if (conn != null) {
-                    conn.setAutoCommit(true);  // Restaura el modo de autocommit por si acaso
-                    conn.close();
-                }
-            } catch (SQLException closeEx) {
-                closeEx.printStackTrace();
-            }
-        }
-        
-    }
-    //pte
-    public void modificarCompra(HttpServletRequest request, HttpServletResponse response) {
-        //CAPTURA DE VARIABLES
-        String ID_Compra = request.getParameter("ID_Compra");//compras
-        String fechaCompra = request.getParameter("fechaCompra");//compras
-        String montoCompra = request.getParameter("montoCompra");//compras
-        String ID_Proveedor = request.getParameter("ID_Proveedor");//compras
-        String cantidadProdCompra = request.getParameter("cantidadProdCompra");//detallecompras
-        String ID_Medicamento = request.getParameter("ID_Medicamento");//detallecompras
-        
-        Connection conn= null;
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            conn = DriverManager.getConnection(url);
-            request.setAttribute("mensaje_conexion", "Ok!");
-            conn.setAutoCommit(false);
-                
-            String sqlCompras = "update Compras set "
-                 + "FechaCompra=?, "
-                 + "MontoCompra=?, "
-                 + "ID_Proveedor=? "
-                 + "where ID_Compra=?";
-            
-            try (PreparedStatement pstmtCompras = conn.prepareStatement(sqlCompras)) {
-            pstmtCompras.setString(1, fechaCompra);
-            pstmtCompras.setString(2, montoCompra);
-            pstmtCompras.setString(3, ID_Proveedor);
-            pstmtCompras.setString(4, ID_Compra);
-
-            int registrosCompras = pstmtCompras.executeUpdate();
-
-            // Modificar en la tabla Detalle_Compras
-            String sqlDetalleCompras = "update Detalle_Compras set "
-                + "Cantidad=?, "
-                + "ID_Medicamento=? "
-                + "where ID_Compra=?";
-            
-            try (PreparedStatement pstmtDetalleCompras = conn.prepareStatement(sqlDetalleCompras)) {
-                pstmtDetalleCompras.setString(1, cantidadProdCompra);
-                pstmtDetalleCompras.setString(2, ID_Medicamento);
-                pstmtDetalleCompras.setString(3, ID_Compra);
-
-                int registrosDetalleCompras = pstmtDetalleCompras.executeUpdate();
-
-                // Si llegas hasta aquí sin excepciones, confirma la transacción
-                conn.commit();
-
-                // Setear el atributo exito en la sesión
-                request.getSession().setAttribute("exito", true);
-            }
-        }
-                
-                
-            
-        } catch (SQLException | ClassNotFoundException ex) {
-            // En caso de error, revierte la transacción
-            try {
-                if (conn != null) {
-                    conn.rollback();
-                }
-            } catch (SQLException rollbackEx) {
-                rollbackEx.printStackTrace();
-            }
-
-            request.getSession().setAttribute("exito", false);
-            ex.printStackTrace();
-        } finally {
-            // Asegúrate de cerrar la conexión
-            try {
-                if (conn != null) {
-                    conn.setAutoCommit(true);  // Restaura el modo de autocommit por si acaso
-                    conn.close();
-                }
-            } catch (SQLException closeEx) {
-                closeEx.printStackTrace();
-            }
-        }
-    }
-    //pte
-    public void eliminarCompra(HttpServletRequest request, HttpServletResponse response) {
-        String ID_Compra = request.getParameter("ID_Compra");
-        Connection conn = null;
-        try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-            conn = DriverManager.getConnection(url);
-            conn.setAutoCommit(false);  // Inicia la transacción
-
-            // Eliminar de la tabla Detalle_Compras
-            String sqlDetalleCompras = "delete from Detalle_Compras where ID_Compra=?";
-            try (PreparedStatement pstmtDetalleCompras = conn.prepareStatement(sqlDetalleCompras)) {
-                pstmtDetalleCompras.setString(1, ID_Compra);
-
-                int registrosDetalleCompras = pstmtDetalleCompras.executeUpdate();
-
-                // Eliminar de la tabla Compras
-                String sqlCompras = "delete from Compras where ID_Compra=?";
-                try (PreparedStatement pstmtCompras = conn.prepareStatement(sqlCompras)) {
-                    pstmtCompras.setString(1, ID_Compra);
-
-                    int registrosCompras = pstmtCompras.executeUpdate();
-
-
-                    // Si llegas hasta aquí sin excepciones, confirma la transacción
-                    conn.commit();
-
-                    // Setear el atributo exito en la sesión
-                    request.getSession().setAttribute("exito", true);
-                }
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            // En caso de error, revierte la transacción
-            try {
-                if (conn != null) {
-                    conn.rollback();
-                }
-            } catch (SQLException rollbackEx) {
-                rollbackEx.printStackTrace();
-            }
-
-            request.getSession().setAttribute("exito", false);
-            ex.printStackTrace();
-        } finally {
-            // Asegúrate de cerrar la conexión
-            try {
-                if (conn != null) {
-                    conn.setAutoCommit(true);  // Restaura el modo de autocommit por si acaso
-                    conn.close();
-                }
-            } catch (SQLException closeEx) {
-                closeEx.printStackTrace();
-            }
-        }
-    } */
     
 
 // PROVEEDORES************************************************************************************
@@ -720,8 +360,8 @@ public class ServletPrincipal extends HttpServlet {
                 PreparedStatement pstmt = conn.prepareStatement(sql);
                 pstmt.setString(1, nombreProveedor);
                 pstmt.setString(2, telefonoProveedor);
-                pstmt.setString(3, email);
-                pstmt.setString(4, ID_Direccion);
+                pstmt.setString(3, ID_Direccion);
+                pstmt.setString(4, email);
 
                 int registros = pstmt.executeUpdate();
                 if (registros > 0) {
@@ -846,9 +486,9 @@ public class ServletPrincipal extends HttpServlet {
                 pstmt.setString(1, nombresCliente);
                 pstmt.setString(2, apellidosCliente);
                 pstmt.setString(3, dUI);
-                pstmt.setString(4, telefonoCliente);
-                pstmt.setString(5, email);
-                pstmt.setString(6, ID_Direccion);
+                pstmt.setString(4, ID_Direccion);
+                pstmt.setString(5, telefonoCliente);
+                pstmt.setString(6, email);
                 
                 int registros = pstmt.executeUpdate();
                 if (registros > 0) {
@@ -1030,7 +670,7 @@ public class ServletPrincipal extends HttpServlet {
     }
     
     public void eliminarMedicamento(HttpServletRequest request, HttpServletResponse response) {
-        String ID_Medicamento = request.getParameter("ID_Empleado");
+        String ID_Medicamento = request.getParameter("ID_Medicamento");
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             try (Connection conn = DriverManager.getConnection(url)) {
@@ -1225,14 +865,6 @@ public class ServletPrincipal extends HttpServlet {
             mostrarProveedores(request,response);
             request.getRequestDispatcher("Proveedores/GestionarProveedores.jsp").forward(request,response);
         
-        }else if(accion.equals("GestionarCompras")){
-            mostrarCompras(request,response);
-            request.getRequestDispatcher("Compras/GestionarCompras.jsp").forward(request,response);
-        
-        }else if(accion.equals("GestionarVentas")){
-            mostrarVentas(request,response);
-            request.getRequestDispatcher("Ventas/GestionarVentas.jsp").forward(request,response);
-        
         }else if(accion.equals("GestionarFacturas")){
             mostrarFacturas(request,response);
             request.getRequestDispatcher("Facturas/GestionarFacturas.jsp").forward(request,response);
@@ -1270,19 +902,19 @@ public class ServletPrincipal extends HttpServlet {
             }
             request.getRequestDispatcher("Proveedores/AgregarProveedor.jsp").forward(request, response);
         
-        }else if (accion.equals("AgregarCompra")) {
-            if (request.getSession().getAttribute("exito") != null) {
-                request.setAttribute("exito", request.getSession().getAttribute("exito"));
-                request.getSession().removeAttribute("exito");
-            }
-            request.getRequestDispatcher("Compras/AgregarCompra.jsp").forward(request, response);
-        
         }else if (accion.equals("AgregarUsuario")) {
             if (request.getSession().getAttribute("exito") != null) {
                 request.setAttribute("exito", request.getSession().getAttribute("exito"));
                 request.getSession().removeAttribute("exito");
             }
             request.getRequestDispatcher("Usuarios/AgregarUsuario.jsp").forward(request, response);
+        
+        }else if (accion.equals("AgregarFactura")) {
+            if (request.getSession().getAttribute("exito") != null) {
+                request.setAttribute("exito", request.getSession().getAttribute("exito"));
+                request.getSession().removeAttribute("exito");
+            }
+            request.getRequestDispatcher("Facturas/AgregarFactura.jsp").forward(request, response);
         }
         
         
@@ -1308,8 +940,13 @@ public class ServletPrincipal extends HttpServlet {
             
             try(PrintWriter print = response.getWriter()){
                 if(usuario.equals("admin") && contrasenia.equals("root")){
-                    request.getRequestDispatcher("Paneles/PanelAdministrador.jsp").forward(request, response);
-                    
+                    request.getRequestDispatcher("Paneles/PanelAdministrador.jsp").forward(request, response);  
+                }else if (usuario.equals("gerente") && contrasenia.equals("1234")) {
+                    request.getRequestDispatcher("Paneles/PanelGerente.jsp").forward(request, response);
+                } else if (usuario.equals("cajero") && contrasenia.equals("1234")) {
+                    request.getRequestDispatcher("Paneles/PanelCajero.jsp").forward(request, response);
+                } else if (usuario.equals("rrhh") && contrasenia.equals("1234")) {
+                    request.getRequestDispatcher("Paneles/PanelRRHH.jsp").forward(request, response);
                 }else{
                     print.println("<!DOCTYPE html>");
                     print.println("<html>");
@@ -1376,19 +1013,6 @@ public class ServletPrincipal extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/ServletPrincipal?accion=GestionarProveedores");
         
             
-        /*}else if (accion.equals("AgregarCompra")) {
-            //LOS DATOS SE LE PASAN POR PARAMETRO A LA FUNCION
-            agregarCompra(request, response);
-            //REDIRIGE NUEVAMENTE A LA VISTA DE AGREGAR EMPLEADO
-            response.sendRedirect(request.getContextPath() + "/ServletPrincipal?accion=AgregarCompra");
-        }else if (accion.equals("ModificarCompra")) {
-            modificarCompra(request, response);
-            response.sendRedirect(request.getContextPath() + "/ServletPrincipal?accion=GestionarCompras");
-        } else if (accion.equals("EliminarCompra")) {
-            eliminarCompra(request, response);
-            response.sendRedirect(request.getContextPath() + "/ServletPrincipal?accion=GestionarCompras");
-        */
-            
         }else if (accion.equals("AgregarUsuario")) {
             //LOS DATOS SE LE PASAN POR PARAMETRO A LA FUNCION
             agregarUsuario(request, response);
@@ -1400,6 +1024,18 @@ public class ServletPrincipal extends HttpServlet {
         } else if (accion.equals("EliminarUsuario")) {
             eliminarUsuario(request, response);
             response.sendRedirect(request.getContextPath() + "/ServletPrincipal?accion=GestionarUsuarios");
+        
+        }else if (accion.equals("AgregarFactura")) {
+            //LOS DATOS SE LE PASAN POR PARAMETRO A LA FUNCION
+            agregarFactura(request, response);
+            //REDIRIGE NUEVAMENTE A LA VISTA DE AGREGAR EMPLEADO
+            response.sendRedirect(request.getContextPath() + "/ServletPrincipal?accion=AgregarFactura");
+        }else if (accion.equals("ModificarFactura")) {
+            modificarFactura(request, response);
+            response.sendRedirect(request.getContextPath() + "/ServletPrincipal?accion=GestionarFacturas");
+        } else if (accion.equals("EliminarFactura")) {
+            eliminarFactura(request, response);
+            response.sendRedirect(request.getContextPath() + "/ServletPrincipal?accion=GestionarFacturas");
         }
         
         
